@@ -1,84 +1,83 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Paper } from '@material-ui/core';
-import { useSelector , useDispatch } from "react-redux";
 import { updateQty } from "./reducer/updateQtyReducer";
-import { setCount , get_cart , delete_cart} from "./reducer/cartReducer";
-import { useEffect } from "react";
- 
+import { setCount, get_cart, delete_cart } from "./reducer/cartReducer";
+
 const useStyles = makeStyles((theme) => ({
     grid: {
-         width: '100%',
-         margin: '0px'
-        },
-        paper:{
-            padding: theme.spacing(2),
-            textAlign: 'center',
-            color: theme.palette.text.secondary,
-            background: theme.palette.success.light,
-        }
+        width: '100%',
+        margin: '0px'
+    },
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        background: theme.palette.success.light,
     }
+}
 ));
-    
+
 const Cart = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
-    const { updateFlag} = useSelector((store) => store.update_Reducer);
+    const { updateFlag } = useSelector((store) => store.update_Reducer);
     const { cart_item } = useSelector((store) => store.cart_Reducer);
 
-    const del_item = (i , q) => {
+    const del_item = (i, q) => {
         dispatch(delete_cart(i));
-        dispatch(setCount(-1*q));
+        dispatch(setCount(-1 * q));
     }
 
-    const changeQty = (id , e) =>{
-        
+    const changeQty = (id, e) => {
+
         const values = {
             quantity: e.target.value,
-            _id: id 
+            _id: id
         }
 
         dispatch(updateQty(values));
     }
 
-    useEffect(()=>{
-        if(updateFlag) {
+    useEffect(() => {
+        if (updateFlag) {
             dispatch(get_cart());
         }
-    },[updateFlag])
+    }, [updateFlag])
     return (
-        <Grid container spacing = {2} className={classes.Grid}>
-            {cart_item && cart_item.map((item , i) => {
+        <Grid container spacing={2} className={classes.Grid}>
+            {cart_item && cart_item.map((item, i) => {
                 return (
                     <>
-                        <Grid  item xs = {12} md={3}>
-                        <Paper className={classes.paper}>
-                            <span>{item.name}</span> 
-                        </Paper>    
-                        </Grid>
-                        <Grid  item xs = {12} md={3}>
+                        <Grid item xs={12} md={3}>
                             <Paper className={classes.paper}>
-                                <input type="number" min="1" onChange={(e)=> {changeQty(item._id , e)}} value={item.quantity}/>
-                            </Paper>    
+                                <span>{item.name}</span>
+                            </Paper>
                         </Grid>
-                        <Grid  item xs = {12} md={3}>
+                        <Grid item xs={12} md={3}>
                             <Paper className={classes.paper}>
-                            <label>{item.price}</label>
+                                <input type="number" min="1" onChange={(e) => { changeQty(item._id, e) }} value={item.quantity} />
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} md={3}>
+                            <Paper className={classes.paper}>
+                                <label>{item.price}</label>
                                 <span>$</span>
-                                
-                            </Paper>    
+
+                            </Paper>
                         </Grid>
-                        <Grid  item xs = {12} md={3}>
+                        <Grid item xs={12} md={3}>
                             <Paper className={classes.paper}>
-                                <input type="button" value = "Remove" onClick={(e)=>{del_item(item._id , item.quantity)}}/> 
-                            </Paper>    
+                                <input type="button" value="Remove" onClick={(e) => { del_item(item._id, item.quantity) }} />
+                            </Paper>
                         </Grid>
 
                     </>
                 )
             })}
-            
-            
+
+
         </Grid>
     )
 }

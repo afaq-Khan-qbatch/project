@@ -1,9 +1,9 @@
 import React from 'react';
-const Error = () =>{
+const Error = () => {
 
     return (
         <>
-        <h1>Oops! page not Found</h1>
+            <h1>Oops! page not Found</h1>
         </>
     )
 }
