@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import logger from 'redux-logger';
+
 import item_Reducer from './data';
-import cart_reducer from './cartReducer'
-import update_reducer from './updateQtyReducer'
+import cart_reducer from './cartReducer';
+import update_reducer from './updateQtyReducer';
 
 export default configureStore({
     reducer: {

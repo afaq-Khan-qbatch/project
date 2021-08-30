@@ -8,6 +8,9 @@ const schema = mongoose.Schema({
     
     quantity:{
         type: Number
+    },
+    userId:{
+        type: String
     }
 })
 

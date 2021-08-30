@@ -22,21 +22,26 @@ app.get('/get_items', async(req , res) =>{
 })
 
 app.post('/save_to_cart' , async(req , res) =>{
-    const { itemId } = req.body;
-    const item_id = new mongoose.mongo.ObjectId(itemId);
+    const { id } = req.body;
+    const { userId } = req.body;
+    const item_id = new mongoose.mongo.ObjectId(id);
     let cartItem = await cart.findOne({item_id});
-    if(!cartItem)
-    {
-        cartItem = await cart.create({
-            item_id,
-            quantity: 1
-        });
+    console.log(cartItem);
+    let singleCart = await cart.findOne({item_id , userId});
+    console.log({singleCart});
+    if(singleCart) {
+        singleCart.quantity = singleCart.quantity + 1;
+        await singleCart.save();
     } else {
-        cartItem = await cart.update({item_id}, {quantity: cartItem.quantity + 1});
-        cartItem = await cart.findOne({item_id});
+        singleCart = await cart.creat({
+            item_id,
+            quantity: 1,
+            userId 
+        })
     }
+
     res.send(
-        cartItem
+        singleCart
     );
 })
 
@@ -56,8 +61,9 @@ app.post('/updateQty' , async(req , res) =>{
 })
 
 
-app.get('/get_cart', async(req , res) =>{
-    const cart_data = await cart.find();
+app.get('/get_cart/:id', async(req , res) =>{
+    const { id } = req.params;
+    const cart_data = await cart.find({ userId: id });
     const full_cart = await Promise.all(cart_data.map(async(element) =>{
         const name = await item.find({_id : element.item_id} , {name : 1, _id:false })
         const price = await item.find({_id : element.item_id} ,{price : 1, _id:false})
@@ -89,20 +95,26 @@ app.delete('/delete_cart' , async(req , res)=>{
     res.send(del);
 })
 
-app.get('/add' , (req , res) =>{
-    // const new_item = new item({
-    //     name: 'cheez',
-    //     price: 150
-    // })
-    // new_item.save().then(()=>{
-    //     res.status(201).send(new_item)
-    // }).catch((e)=>{
-    //     res.status(400).send
-    // })
+app.post('/add' , async(req , res) =>{
+    const new_item = new item(req.body)
+    new_item.save().then(()=>{
+        res.status(201).send(new_item)
+    }).catch((e)=>{
+        res.status(400).send
+    })
 
 })
 
-
+app.get('/getDescription/:id' , async(req , res) => {
+    const {id} = req.params;
+    const desItem = await item.findById(id);
+    if(desItem){
+        res.send(desItem);
+    }
+    else{
+        res.send('id not found');
+    }
+})
 
 app.listen(port , ()=>{
     console.log(`connection is running on port ${port}`)

@@ -3,8 +3,10 @@ import axios from './axios.js';
 
 export const get_cart = createAsyncThunk(
     "getting_cart",
-    async () => {
-        const { data } = await axios.get('/get_cart');
+    async (id) => {
+        console.log(id);
+        const { data } = await axios.get(`/get_cart/66`);
+        console.log("data get_cart: " , data);
         return data;
     }
 )
@@ -22,6 +24,25 @@ export const delete_cart = createAsyncThunk(
     }
 )
 
+export const addInCart = createAsyncThunk(
+    "add_to_cart",
+    async (userdata , ThunkApi) => {
+        console.log('id', userdata);
+        const config = {
+            method: 'POST',
+            url: '/save_to_cart',
+            data: {id: userdata.id , userId: userdata.userId}
+        }
+        try {
+            const { data } = await axios(config);
+            console.log(data);
+            return data;
+        } catch (e) {
+            return ThunkApi.rejectWithValue(e.message);
+        }
+    }
+)
+
 const cart_slice = createSlice({
     name: "cart_items",
     initialState: {
@@ -30,11 +51,9 @@ const cart_slice = createSlice({
     },
     extraReducers: {
 
-
         [get_cart.fulfilled]: (state, action) => {
             state.cart_item = action.payload;
             state.count = 0;
-            console.log("cart red");
             action.payload.forEach(element => {
                 state.count = state.count + element.quantity;
             })

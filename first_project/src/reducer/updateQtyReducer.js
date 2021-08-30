@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from './axios.js';
 
 export const updateQty = createAsyncThunk(
@@ -9,7 +9,6 @@ export const updateQty = createAsyncThunk(
             url: '/updateQty',
             data: { _id: values._id, quantity: values.quantity === '' || values.quantity <= 0 ? 1 : values.quantity }
         }
-        console.log("update reducer", values._id, values.quantity)
         const { data } = await axios(config);
         return data;
     }

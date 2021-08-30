@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
+import { useSelector, useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper } from '@material-ui/core';
 import { updateQty } from "./reducer/updateQtyReducer";
 import { setCount, get_cart, delete_cart } from "./reducer/cartReducer";
@@ -50,24 +50,24 @@ const Cart = () => {
             {cart_item && cart_item.map((item, i) => {
                 return (
                     <>
-                        <Grid item xs={12} md={3}>
+                        <Grid key={i} item xs={6} md={3}>
                             <Paper className={classes.paper}>
                                 <span>{item.name}</span>
                             </Paper>
                         </Grid>
-                        <Grid item xs={12} md={3}>
+                        <Grid key={i + 1} item xs={6} md={3}>
                             <Paper className={classes.paper}>
                                 <input type="number" min="1" onChange={(e) => { changeQty(item._id, e) }} value={item.quantity} />
                             </Paper>
                         </Grid>
-                        <Grid item xs={12} md={3}>
+                        <Grid key={i + 2} item xs={6} md={3}>
                             <Paper className={classes.paper}>
                                 <label>{item.price}</label>
                                 <span>$</span>
 
                             </Paper>
                         </Grid>
-                        <Grid item xs={12} md={3}>
+                        <Grid key={i + 3} item xs={6} md={3}>
                             <Paper className={classes.paper}>
                                 <input type="button" value="Remove" onClick={(e) => { del_item(item._id, item.quantity) }} />
                             </Paper>
