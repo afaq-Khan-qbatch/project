@@ -5,7 +5,7 @@ export const get_cart = createAsyncThunk(
     "getting_cart",
     async (id) => {
         console.log(id);
-        const { data } = await axios.get(`/get_cart/66`);
+        const { data } = await axios.get(`/get_cart/${id}`);
         console.log("data get_cart: " , data);
         return data;
     }

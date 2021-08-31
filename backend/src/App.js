@@ -5,11 +5,16 @@ require ('./db/conn');
 require('dotenv').config();
 const item = require('./model/item');
 const cart = require('./model/cart');
-const port = process.env.PORT || 5000;
+const user = require('./model/user');
+const auth = require('./routes/auth');
+
+const port = process.env.PORT || 3001;
 const app = express();
 
 app.use(cors())
 app.use(express.json());
+
+app.use('/auth', auth);
 
 app.get('/', (req , res) =>{
     res.send('ok');
@@ -24,6 +29,7 @@ app.get('/get_items', async(req , res) =>{
 app.post('/save_to_cart' , async(req , res) =>{
     const { id } = req.body;
     const { userId } = req.body;
+    console.log(id ,"  " , userId);
     const item_id = new mongoose.mongo.ObjectId(id);
     let cartItem = await cart.findOne({item_id});
     console.log(cartItem);
@@ -33,7 +39,7 @@ app.post('/save_to_cart' , async(req , res) =>{
         singleCart.quantity = singleCart.quantity + 1;
         await singleCart.save();
     } else {
-        singleCart = await cart.creat({
+        singleCart = await cart.create({
             item_id,
             quantity: 1,
             userId 
@@ -63,6 +69,7 @@ app.post('/updateQty' , async(req , res) =>{
 
 app.get('/get_cart/:id', async(req , res) =>{
     const { id } = req.params;
+    console.log('id  ', id)
     const cart_data = await cart.find({ userId: id });
     const full_cart = await Promise.all(cart_data.map(async(element) =>{
         const name = await item.find({_id : element.item_id} , {name : 1, _id:false })

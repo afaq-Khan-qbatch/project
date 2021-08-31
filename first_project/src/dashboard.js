@@ -55,6 +55,7 @@ const Dashboard = (props) => {
         }
        
         dispatch(addInCart(uesrdata));
+        console.log('ok');
         dispatch(setCount(1));
 
     }
