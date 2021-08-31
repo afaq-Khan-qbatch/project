@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper } from '@material-ui/core';
 import { updateQty } from "./reducer/updateQtyReducer";
 import { setCount, get_cart, delete_cart } from "./reducer/cartReducer";
+import { getCookie, setCookie } from './cookie';
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -41,8 +42,13 @@ const Cart = () => {
     }
 
     useEffect(() => {
+        
+
         if (updateFlag) {
-            dispatch(get_cart());
+            const Token = getCookie('UserId');
+            if(Token){
+                dispatch(get_cart(Token));
+            }
         }
     }, [updateFlag])
     return (

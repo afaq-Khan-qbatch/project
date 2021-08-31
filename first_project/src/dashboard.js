@@ -7,6 +7,7 @@ import { Grid, Paper } from '@material-ui/core';
 import { get_items } from './reducer/data';
 import { getDescription } from './reducer/data';
 import { get_cart, setCount, addInCart } from "./reducer/cartReducer";
+import jwt_decode from "jwt-decode"
 import axios from 'axios';
 
 import {getCookie , setCookie} from './cookie';
@@ -34,24 +35,28 @@ const Dashboard = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const { data } = useSelector((store) => store.items_reducer);
+    const { token } = useSelector((store) => store.items_reducer);
+    const { islogin } = useSelector((store) => store.items_reducer);
     const { Description: d } = useSelector((state) => state.items_reducer);
 
     useEffect(() => {
         dispatch(get_items());
         dispatch(setCount());
-        const Token = getCookie('UserId');
-        if(!Token){
-            setCookie('UserId' , (Math.random() + 1).toString(36).substring(7));
+        const token = getCookie('token');
+        if(!token){
+            setCookie('token' , (Math.random() + 1).toString(36).substring(7));
         }
-
-        dispatch(get_cart(Token));
+        var decoded = jwt_decode(token);
+       dispatch(get_cart(decoded.email.toLowerCase()));
+        
+        
 
     }, [])
     const add_to_cart = (_id) => {
         const userid = getCookie('UserId');
         const uesrdata = {
             id: _id,
-            userId: userid
+            userId: !token ? userid : token
         }
        
         dispatch(addInCart(uesrdata));

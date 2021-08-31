@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,18 +13,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { signIn } from './reducer/data';
+import { getCookie, setCookie } from './cookie';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,7 +39,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+  const history = useHistory();
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { token } = useSelector((store) => store.items_reducer);
+  const { signIN } = useSelector((store) => store.items_reducer);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(()=>{
+    if(signIN){
+      history.push('/')
+    }
+      
+  },[signIN])
+
+  const submitForm = async (event) => {
+    event.preventDefault();
+    const Token = getCookie('UserId');
+    const data = { email, password , Token};
+  
+    await dispatch(signIn(data))
+    console.log("signIN  " , signIN);
+    
+ 
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,7 +76,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={submitForm}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -69,6 +86,8 @@ export default function SignIn() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            value={email}
+            onChange={(e) => { setEmail(e.target.value) }}
             autoFocus
           />
           <TextField
@@ -80,12 +99,14 @@ export default function SignIn() {
             label="Password"
             type="password"
             id="password"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value) }}
             autoComplete="current-password"
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth

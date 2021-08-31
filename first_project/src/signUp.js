@@ -1,30 +1,21 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useRouteMatch, useHistory, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { siguUP } from './reducer/data';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,6 +39,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const [name, setName] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitForm = (event) =>{
+    event.preventDefault();
+      const data = {name , lname , email , password};
+      console.log(data);
+      dispatch(siguUP(data));
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,7 +65,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit = {submitForm}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -69,6 +75,8 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="firstName"
+                value = {name}
+                onChange = {(e)=>{setName(e.target.value)}}
                 label="First Name"
                 autoFocus
               />
@@ -81,6 +89,8 @@ export default function SignUp() {
                 id="lastName"
                 label="Last Name"
                 name="lastName"
+                value = {lname}
+                onChange = {(e)=>{setLname(e.target.value)}}
                 autoComplete="lname"
               />
             </Grid>
@@ -91,6 +101,8 @@ export default function SignUp() {
                 fullWidth
                 id="email"
                 label="Email Address"
+                value = {email}
+                onChange = {(e)=>{setEmail(e.target.value)}}
                 name="email"
                 autoComplete="email"
               />
@@ -104,6 +116,8 @@ export default function SignUp() {
                 label="Password"
                 type="password"
                 id="password"
+                value = {password}
+                onChange = {(e)=>{setPassword(e.target.value)}}
                 autoComplete="current-password"
               />
             </Grid>
@@ -120,7 +134,7 @@ export default function SignUp() {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link onClick={()=> history.push('/signin')} variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

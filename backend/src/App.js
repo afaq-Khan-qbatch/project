@@ -29,12 +29,12 @@ app.get('/get_items', async(req , res) =>{
 app.post('/save_to_cart' , async(req , res) =>{
     const { id } = req.body;
     const { userId } = req.body;
-    console.log(id ,"  " , userId);
+    //console.log(id ,"  " , userId);
     const item_id = new mongoose.mongo.ObjectId(id);
     let cartItem = await cart.findOne({item_id});
-    console.log(cartItem);
+    //console.log(cartItem);
     let singleCart = await cart.findOne({item_id , userId});
-    console.log({singleCart});
+    //console.log({singleCart});
     if(singleCart) {
         singleCart.quantity = singleCart.quantity + 1;
         await singleCart.save();
@@ -70,7 +70,8 @@ app.post('/updateQty' , async(req , res) =>{
 app.get('/get_cart/:id', async(req , res) =>{
     const { id } = req.params;
     console.log('id  ', id)
-    const cart_data = await cart.find({ userId: id });
+    const cart_data = await cart.find({userId: id});
+    console.log("cart " , cart_data);
     const full_cart = await Promise.all(cart_data.map(async(element) =>{
         const name = await item.find({_id : element.item_id} , {name : 1, _id:false })
         const price = await item.find({_id : element.item_id} ,{price : 1, _id:false})
@@ -97,7 +98,7 @@ app.post('/get_price' , async(req , res) =>{
 
 app.delete('/delete_cart' , async(req , res)=>{
     const Id = req.body.items_Id;
-    console.log(Id)
+    //console.log(Id)
         const del = await cart.findByIdAndDelete({_id : Id})
     res.send(del);
 })
