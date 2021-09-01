@@ -1,11 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from './axios.js';
+import { getCookie } from '../cookie.js';
 
 export const get_cart = createAsyncThunk(
     "getting_cart",
-    async (id) => {
+    async (id , ThunkApi) => {
+        const token = getCookie('token');
+        try{
+            const config = {
+                method: 'POST',
+                url: '/carts/get_cart',
+                headers: {
+                    'x-auth-token': `bearer ${token}`
+                },
+            }
+            const { data } = await axios(config);
+            console.log(data);
+            return data;
+        }catch(e){
+            return ThunkApi.rejectWithValue(e);
+        }
         console.log(id);
-        const { data } = await axios.get(`/get_cart/${id}`);
+        const { data } = await axios.get(`/${id}`);
         console.log("data get_cart: " , data);
         return data;
     }
@@ -16,7 +32,7 @@ export const delete_cart = createAsyncThunk(
     async (Id, ThunkAPI) => {
         const config = {
             method: 'DELETE',
-            url: '/delete_cart',
+            url: '/carts/delete_cart',
             data: { "items_Id": Id }
         }
         const { data } = await axios(config);
@@ -30,8 +46,11 @@ export const addInCart = createAsyncThunk(
         console.log('id', userdata);
         const config = {
             method: 'POST',
-            url: '/save_to_cart',
-            data: {id: userdata.id , userId: userdata.userId}
+            url: '/carts/save_to_cart',
+            headers: {
+                'x-auth-token': `bearer ${userdata.userId}`
+            },
+            data: { id: userdata.id }
         }
         try {
             const { data } = await axios(config);
@@ -69,9 +88,13 @@ const cart_slice = createSlice({
         setCount: (state, action) => {
             state.count = state.count + action.payload;
         },
+        clearState: ( state , action ) =>{
+            state.count = 0;
+            state.cart_item = [];
+        }
 
     }
 })
 
-export const { setCount } = cart_slice.actions;
+export const { setCount,clearState } = cart_slice.actions;
 export default cart_slice.reducer;

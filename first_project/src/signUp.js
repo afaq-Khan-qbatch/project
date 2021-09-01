@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -51,10 +51,19 @@ export default function SignUp() {
   const submitForm = (event) =>{
     event.preventDefault();
       const data = {name , lname , email , password};
-      console.log(data);
-      dispatch(siguUP(data));
+      dispatch(siguUP(data)).then(({payload}) => {
+        console.log("🚀 ~ file: signUp.js ~ line 55 ~ dispatch ~ payload", payload)
+        if(payload.success) {
+          history.push('/signin');
+        }
+      });
   }
 
+  // useEffect(()=>{
+  //   if(siguUP){
+  //     history.push('/signin');
+  //   }
+  // } , [siguUP])
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

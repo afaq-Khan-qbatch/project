@@ -57,12 +57,10 @@ export default function SignIn() {
 
   const submitForm = async (event) => {
     event.preventDefault();
-    const Token = getCookie('UserId');
+    const Token = getCookie('token');
     const data = { email, password , Token};
   
     await dispatch(signIn(data))
-    console.log("signIN  " , signIN);
-    
  
   }
 

@@ -46,17 +46,20 @@ const Dashboard = (props) => {
         if(!token){
             setCookie('token' , (Math.random() + 1).toString(36).substring(7));
         }
-        var decoded = jwt_decode(token);
-       dispatch(get_cart(decoded.email.toLowerCase()));
+       dispatch(get_cart());
         
         
 
     }, [])
     const add_to_cart = (_id) => {
-        const userid = getCookie('UserId');
+        const tokenn = getCookie('token');
+        if(!tokenn){
+            setCookie('token' , (Math.random() + 1).toString(36).substring(7));
+        }
+        const token = getCookie('token');
         const uesrdata = {
             id: _id,
-            userId: !token ? userid : token
+            userId: token
         }
        
         dispatch(addInCart(uesrdata));
@@ -94,7 +97,7 @@ const Dashboard = (props) => {
                 </Grid>
             </div>
 
-            <div style={{ background: 'rgb(213 204 234)', height: '50%', width: '22%', position: 'fixed', top: '50px', right: '10px', textAlign: 'center' }}>
+            <div style={{ background: 'rgb(213 204 234)', height: '50%', width: '22%', position: 'fixed', top: '85px', right: '10px', textAlign: 'center' }}>
                 <h1 style={{ color: 'green' }}>Description</h1>
 
                 <Switch>

@@ -42,13 +42,8 @@ const Cart = () => {
     }
 
     useEffect(() => {
-        
-
         if (updateFlag) {
-            const Token = getCookie('UserId');
-            if(Token){
-                dispatch(get_cart(Token));
-            }
+            dispatch(get_cart());
         }
     }, [updateFlag])
     return (

@@ -15,9 +15,9 @@ function App() {
       <NavBar />
       <Switch>
         <Route exact path='/cart' component={Cart} />
-        <Route exect path='/signup' component={SignUp}/>
-        <Route exect path='/signin' component={SignIn} />
-        <Route exect path='/' component={dashboard} />
+        <Route  path='/signup' component={SignUp}/>
+        <Route  path='/signin' component={SignIn} />
+        <Route  path='/' component={dashboard} />
         <Route component={Error} />
       </Switch>
 

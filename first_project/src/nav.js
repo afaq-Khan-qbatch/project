@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Badge from '@material-ui/core/Badge';
 import { useDispatch, useSelector } from "react-redux";
-import { get_cart, setCount } from "./reducer/cartReducer";
+import { get_cart, setCount,clearState } from "./reducer/cartReducer";
 import { getCookie, setCookie } from './cookie';
 
 const useStyles = makeStyles((theme) => ({
@@ -26,13 +26,16 @@ const NavBar = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { count } = useSelector((store) => store.cart_Reducer);
-    const { signIN } = useSelector((store) => store.items_reducer);
+
+    const token = getCookie('token');
 
     const get_cart_item = () => {
-        dispatch(setCount(1));
+        dispatch(get_cart());
+    }
 
-        const Token = getCookie('token');
-        dispatch(get_cart(Token));
+    const logOut = () =>{
+        setCookie('token' , '');
+        dispatch(clearState());
     }
 
     return (
@@ -45,11 +48,11 @@ const NavBar = () => {
                         </Badge> &nbsp; &nbsp;
                     </NavLink>
 
-                    { !signIN ? <NavLink style={{ textDecoration: 'none' }} to='/signup' onClick={(e) => { }}>
+                    { token.length < 12 ? <NavLink style={{ textDecoration: 'none' }} to='/signup' onClick={(e) => { }}>
                         <Button variant="contained" color="secondary">
                             SignUp
                         </Button>
-                    </NavLink>: <NavLink style={{ textDecoration: 'none' }} to='/' onClick={(e) => { }}>
+                    </NavLink>: <NavLink style={{ textDecoration: 'none' }} to='/' onClick={(e) => {logOut()}}>
                         <Button variant="contained" color="secondary">
                             LogOut
                         </Button>

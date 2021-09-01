@@ -1,24 +1,30 @@
+require('dotenv').config();
 const router = require('express').Router();
 require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const user = require('../model/user');
 const cart = require('../model/cart');
+const checkAuth = require('../middleware/checkAuth');
 
-router.post('/signup', async (req, res) => {
+const KEY = process.env.KEY;
+
+router.post('/signup', async(req, res) => {
 
     const { email, password, fname, lname } = req.body;
+   // console.log("body og signup  " , req.body);
     const isUserExist = await user.findOne({ email: email });
-    
+    console.log("is user exisst  " , isUserExist);
     if (isUserExist) {
-        res.status(200).send('User of this email already exist');
+        console.log("isUserExist");
+        return res.status(400).send('User of this email already exist');
     } else {
-        console.log(req.body);
+        
         const hashedPasswoed = await bcrypt.hash(password, 10);
-        console.log("hashedPasswoed", hashedPasswoed);
+      //  console.log(KEY , hashedPasswoed);
         const token = jwt.sign({
             email
-        }, "hjgkgjhlklkj;ljghdhg", {
+        }, KEY , {
             expiresIn: 360000
         })
         console.log({token});
@@ -30,7 +36,10 @@ router.post('/signup', async (req, res) => {
                 lastname: lname
             });
             console.log({new_user});
-            res.status(201).send(token);
+            res.status(201).json({
+                token,
+                success: true
+            });
         } catch (e) {
 
             res.status(400).send(e);
@@ -39,11 +48,15 @@ router.post('/signup', async (req, res) => {
 
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', checkAuth , async (req, res) => {
     try {
-        const { email, password, Token } = req.body;
-        const loginuser = await user.findOne({ email });
-        console.log("loginuser", Token);
+        const { email, password } = req.body;
+        const  Token  = req.user;
+        console.log("token  " , Token)
+        console.log("emil " , email);
+        console.log(email)
+        const loginuser = await user.findOne({ email: email.toLowerCase() });
+        console.log("loginuser  " , loginuser);
         if (!loginuser) {
             console.log('error');
             return res.status(400).json({
@@ -68,18 +81,16 @@ router.post('/login', async (req, res) => {
             })
         }
 
-        //Assign user at db
-        //const login = await cart.find({ userId: Token });
+
         try{
             const updated = await cart.updateMany({ userId: Token },{ $set: {userId: email.toLowerCase()}})
         }catch(e){
             res.send(e);
         }
-       // console.log(login);
 
         const token = jwt.sign({
             email
-        }, "hjgkgjhlklkj;ljghdhg", {
+        }, KEY , {
             expiresIn: 360000
         })
     

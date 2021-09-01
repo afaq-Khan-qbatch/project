@@ -5,8 +5,7 @@ import { getCookie, setCookie } from '../cookie';
 export const get_items = createAsyncThunk(
     "getting_items",
     async () => {
-        const { data } = await axios.get('/get_items');
-        //console.log(data);
+        const { data } = await axios.get('/products/get_items');
         return data;
     }
 )
@@ -15,7 +14,7 @@ export const getDescription = createAsyncThunk(
     "getting_Description",
     async (_id , ThunkApi) => {
         try{
-            const { data } = await axios.get(`/getDescription/${_id}`);
+            const { data } = await axios.get(`/products/getDescription/${_id}`);
             return data;
         }catch(e){
             return ThunkApi.rejectWithValue(e.message);
@@ -33,10 +32,11 @@ export const siguUP = createAsyncThunk(
                 url: '/auth/signup',
                 data: user_data
             }
-            const { data } = axios(config);
+            const { data } = await axios(config);
             return data;
-        }catch{
-            return ThunkApi.rejectWithValue(e.message);
+        }catch (error) {
+            console.log("=>>>>>", error)
+            return ThunkApi.rejectWithValue(error.message);
         }
     }
 )
@@ -46,15 +46,19 @@ export const signIn = createAsyncThunk(
     async(user_data , ThunkApi) =>{
         console.log("signin ", user_data);
         try{
+            console.log("in try " ,user_data.Token);
             const config = {
                 method: 'POST',
                 url: '/auth/login',
-                data: user_data
+                headers: {
+                    'x-auth-token': `bearer ${user_data.Token} .`
+                },
+                data: { email: user_data.email , password: user_data.password }
             }
             const data = await axios(config);
-            console.log("data", data.data);
+            console.log("token   ", data.data);
             return data.data;
-        }catch{
+        }catch (e){
             return ThunkApi.rejectWithValue(e.message);
         }
     }
@@ -69,7 +73,6 @@ const item_slice = createSlice({
         status: null,
         signUP: null,
         signIN: null,
-        islogin: false
     },
     extraReducers: {
         [get_items.pending]: (state, action) => ({
@@ -91,15 +94,15 @@ const item_slice = createSlice({
         },
         [siguUP.panding]: (state , action) =>({
             ...state,
-            signUP: 'pandind'
         }),
-        [siguUP.fulfilled]: (state , action) =>({
+        [siguUP.fulfilled]: (state , action) =>{
+            console.log("i am in fullfilled")
+            return{
             ...state,
-            signUP: action.payload
-        }),
+            signUP: true
+        }},
         [siguUP.rejected]: (state , action) =>({
             ...state,
-            signUP: 'rejected'
         }),
 
         [signIn.panding]: (state , action) =>({
@@ -113,10 +116,11 @@ const item_slice = createSlice({
             return {
             ...state,
             signIN: true,
+            
         }},
         [signIn.rejected]: (state , action) =>({
             ...state,
-            signIN: 'rejected'
+            signIN: false
         }),
     },
 })

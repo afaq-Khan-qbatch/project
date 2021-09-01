@@ -6,7 +6,7 @@ export const updateQty = createAsyncThunk(
     async (values, ThunkAPI) => {
         const config = {
             method: 'POST',
-            url: '/updateQty',
+            url: '/carts/updateQty',
             data: { _id: values._id, quantity: values.quantity === '' || values.quantity <= 0 ? 1 : values.quantity }
         }
         const { data } = await axios(config);
