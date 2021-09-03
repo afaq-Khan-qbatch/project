@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Badge from '@material-ui/core/Badge';
 import { useDispatch, useSelector } from "react-redux";
-import { get_cart, setCount,clearState } from "./reducer/cartReducer";
+import { get_cart, setCount, clearState } from "./reducer/cartReducer";
 import { getCookie, setCookie } from './cookie';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,8 +33,8 @@ const NavBar = () => {
         dispatch(get_cart());
     }
 
-    const logOut = () =>{
-        setCookie('token' , '');
+    const logOut = () => {
+        setCookie('token', '');
         dispatch(clearState());
     }
 
@@ -45,14 +45,20 @@ const NavBar = () => {
                     <NavLink style={{ textDecoration: 'none' }} to='/cart' onClick={(e) => { get_cart_item() }}>
                         <Badge color="secondary" badgeContent={count} max={999}>
                             <AddShoppingCartIcon />
-                        </Badge> &nbsp; &nbsp;
+                        </Badge> &nbsp; &nbsp; &nbsp; &nbsp;
                     </NavLink>
 
-                    { token.length < 12 ? <NavLink style={{ textDecoration: 'none' }} to='/signup' onClick={(e) => { }}>
-                        <Button variant="contained" color="secondary">
-                            SignUp
-                        </Button>
-                    </NavLink>: <NavLink style={{ textDecoration: 'none' }} to='/' onClick={(e) => {logOut()}}>
+                    {token.length < 12 ? <>
+                        <NavLink style={{ textDecoration: 'none' }} to='/signup'>
+                            <Button variant="contained" color="secondary">
+                                SignUp
+                            </Button>
+                        </NavLink> &nbsp; &nbsp; &nbsp; &nbsp;
+                        <NavLink style={{ textDecoration: 'none' }} to ='/signin' >
+                            <Button variant="contained" color="primary">
+                                SignIn
+                            </Button>
+                        </NavLink> </> : <NavLink style={{ textDecoration: 'none' }} to='/' onClick={(e) => { logOut() }}>
                         <Button variant="contained" color="secondary">
                             LogOut
                         </Button>

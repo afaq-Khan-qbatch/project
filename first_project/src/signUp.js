@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useRouteMatch, useHistory, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { siguUP } from './reducer/data';
 
@@ -47,6 +48,8 @@ export default function SignUp() {
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { errorSignup } = useSelector((store) => store.items_reducer);
 
   const submitForm = (event) =>{
     event.preventDefault();
@@ -143,10 +146,11 @@ export default function SignUp() {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link onClick={()=> history.push('/signin')} variant="body2">
+              <Link to ='/signin'  variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
+            {errorSignup && errorSignup}
           </Grid>
         </form>
       </div>

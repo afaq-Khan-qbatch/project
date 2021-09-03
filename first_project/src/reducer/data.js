@@ -36,7 +36,7 @@ export const siguUP = createAsyncThunk(
             return data;
         }catch (error) {
             console.log("=>>>>>", error)
-            return ThunkApi.rejectWithValue(error.message);
+            return ThunkApi.rejectWithValue(error.response.data);
         }
     }
 )
@@ -59,7 +59,7 @@ export const signIn = createAsyncThunk(
             console.log("token   ", data.data);
             return data.data;
         }catch (e){
-            return ThunkApi.rejectWithValue(e.message);
+            return ThunkApi.rejectWithValue(e.response.data);
         }
     }
 )
@@ -73,6 +73,8 @@ const item_slice = createSlice({
         status: null,
         signUP: null,
         signIN: null,
+        error: null,
+        errorSignup: null
     },
     extraReducers: {
         [get_items.pending]: (state, action) => ({
@@ -103,6 +105,7 @@ const item_slice = createSlice({
         }},
         [siguUP.rejected]: (state , action) =>({
             ...state,
+            errorSignup: action.payload.error[0].msg,
         }),
 
         [signIn.panding]: (state , action) =>({
@@ -118,10 +121,11 @@ const item_slice = createSlice({
             signIN: true,
             
         }},
-        [signIn.rejected]: (state , action) =>({
+        [signIn.rejected]: (state , action) =>{
+            return{
             ...state,
-            signIN: false
-        }),
+            error: action.payload.error[0].msg,
+        }},
     },
 })
 

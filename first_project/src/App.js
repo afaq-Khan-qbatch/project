@@ -14,10 +14,10 @@ function App() {
     <>
       <NavBar />
       <Switch>
-        <Route exact path='/cart' component={Cart} />
-        <Route  path='/signup' component={SignUp}/>
-        <Route  path='/signin' component={SignIn} />
-        <Route  path='/' component={dashboard} />
+        <Route path='/cart' component={Cart} />
+        <Route path='/signup' component={SignUp}/>
+        <Route path='/signin' component={SignIn} />
+        <Route path='/' component={dashboard} />
         <Route component={Error} />
       </Switch>
 

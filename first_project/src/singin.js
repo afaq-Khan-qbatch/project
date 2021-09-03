@@ -44,11 +44,14 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const { token } = useSelector((store) => store.items_reducer);
   const { signIN } = useSelector((store) => store.items_reducer);
+  const { error } = useSelector((store) => store.items_reducer);
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(()=>{
+    console.log("sign in  " , signIN);
     if(signIN){
       history.push('/')
     }
@@ -61,6 +64,7 @@ export default function SignIn() {
     const data = { email, password , Token};
   
     await dispatch(signIn(data))
+    console.log("eeeerrrooorr   " , error);
  
   }
 
@@ -116,12 +120,13 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              {error && error}
+              {/* <Link href="#" variant="body2">
                 Forgot password?
-              </Link>
+              </Link> */}
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link to='/signup' variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
