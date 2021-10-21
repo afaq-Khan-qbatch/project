@@ -69,7 +69,6 @@ const cart_slice = createSlice({
         cart_item: [],
     },
     extraReducers: {
-
         [get_cart.fulfilled]: (state, action) => {
             state.cart_item = action.payload;
             state.count = 0;

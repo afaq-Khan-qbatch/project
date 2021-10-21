@@ -12,9 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useRouteMatch, useHistory, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setEmaill } from './reducer/data';
 import { siguUP } from './reducer/data';
 
 
@@ -40,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
-  const match = useRouteMatch();
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -53,11 +51,12 @@ export default function SignUp() {
 
   const submitForm = (event) =>{
     event.preventDefault();
-      const data = {name , lname , email , password};
+      const data = {fname: name , lname , email , password};
       dispatch(siguUP(data)).then(({payload}) => {
         console.log("🚀 ~ file: signUp.js ~ line 55 ~ dispatch ~ payload", payload)
         if(payload.success) {
-          history.push('/signin');
+          dispatch(setEmaill(email));
+          history.push('/stripe');
         }
       });
   }

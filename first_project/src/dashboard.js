@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react';
 import { Switch, Route, Link, useRouteMatch, Router } from 'react-router-dom';
-import DescriptionIcon from '@material-ui/icons/Description';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Paper } from '@material-ui/core';
 import { get_items } from './reducer/data';
 import { getDescription } from './reducer/data';
 import { get_cart, setCount, addInCart } from "./reducer/cartReducer";
-import jwt_decode from "jwt-decode"
-import axios from 'axios';
 
 import {getCookie , setCookie} from './cookie';
 

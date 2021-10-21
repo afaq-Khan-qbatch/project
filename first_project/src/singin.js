@@ -42,7 +42,6 @@ export default function SignIn() {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { token } = useSelector((store) => store.items_reducer);
   const { signIN } = useSelector((store) => store.items_reducer);
   const { error } = useSelector((store) => store.items_reducer);
 

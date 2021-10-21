@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from './axios.js';
-import { getCookie, setCookie } from '../cookie';
+import { setCookie } from '../cookie';
 
 export const get_items = createAsyncThunk(
     "getting_items",
@@ -74,7 +74,8 @@ const item_slice = createSlice({
         signUP: null,
         signIN: null,
         error: null,
-        errorSignup: null
+        errorSignup: null,
+        email: null
     },
     extraReducers: {
         [get_items.pending]: (state, action) => ({
@@ -101,11 +102,11 @@ const item_slice = createSlice({
             console.log("i am in fullfilled")
             return{
             ...state,
-            signUP: true
+            signUP: true,
         }},
         [siguUP.rejected]: (state , action) =>({
             ...state,
-            errorSignup: action.payload.error[0].msg,
+            errorSignup: action.payload.error,
         }),
 
         [signIn.panding]: (state , action) =>({
@@ -127,6 +128,13 @@ const item_slice = createSlice({
             error: action.payload.error[0].msg,
         }},
     },
+    reducers: {
+        setEmaill: (state, action) => {
+            console.log('email => ', email);
+            state.email = action.payload;
+        }
+    }
 })
 
+export const { setEmaill } = item_slice.actions;
 export default item_slice.reducer;

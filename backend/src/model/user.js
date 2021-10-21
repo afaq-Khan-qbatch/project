@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { default: Stripe } = require('stripe');
 const validator = require('validator');
 
 const schema = mongoose.Schema({
@@ -21,6 +22,15 @@ const schema = mongoose.Schema({
     },
     lastname:{
         type: String
+    },
+    payment: {
+        type: Object,
+        customer_id: {
+            type: String,
+        },
+        subscription_id: {
+            type: String
+        }
     }
 
 })

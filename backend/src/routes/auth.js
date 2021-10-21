@@ -6,15 +6,14 @@ const jwt = require('jsonwebtoken');
 const user = require('../model/user');
 const cart = require('../model/cart');
 const checkAuth = require('../middleware/checkAuth');
-
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 const KEY = process.env.KEY;
 
 router.post('/signup', async(req, res) => {
 
     const { email, password, fname, lname } = req.body;
-   // console.log("body og signup  " , req.body);
+    console.log("body of signup  " , req.body);
     const isUserExist = await user.findOne({ email: email });
-    console.log("is user exisst  " , isUserExist);
     if (isUserExist) {
       //  console.log("isUserExist");
         return res.status(400).json({
@@ -35,11 +34,17 @@ router.post('/signup', async(req, res) => {
         })
         console.log({token});
         try {
+            const customer = await stripe.customers.create({
+                email,
+                description: `name: ${fname} , email: ${email}`,
+              });
+              console.log('customer id => ', customer);
             const new_user = await user.create({
                 email,
                 password: hashedPasswoed,
                 firstname: fname,
-                lastname: lname
+                lastname: lname,
+                'payment.customer_id' : customer
             });
             console.log({new_user});
             res.status(201).json({
