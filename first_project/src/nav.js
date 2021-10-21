@@ -7,6 +7,7 @@ import Badge from '@material-ui/core/Badge';
 import { useDispatch, useSelector } from "react-redux";
 import { get_cart, setCount, clearState } from "./reducer/cartReducer";
 import { getCookie, setCookie } from './cookie';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     grid: {
@@ -26,6 +27,7 @@ const NavBar = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { count } = useSelector((store) => store.cart_Reducer);
+    const history = useHistory();
 
     const token = getCookie('token');
 
@@ -55,7 +57,7 @@ const NavBar = () => {
                             </Button>
                         </NavLink> &nbsp; &nbsp; &nbsp; &nbsp;
                         <NavLink style={{ textDecoration: 'none' }} to ='/signin' >
-                            <Button variant="contained" color="primary">
+                            <Button variant="contained" color="primary" onClick= {()=> history.push('/signin')}>
                                 SignIn
                             </Button>
                         </NavLink> </> : <NavLink style={{ textDecoration: 'none' }} to='/' onClick={(e) => { logOut() }}>

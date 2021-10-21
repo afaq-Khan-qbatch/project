@@ -14,9 +14,9 @@ router.post('/deductPayment', async (req, res) => {
         const customerId = payment.customer_id.id;
         console.log('\n\n', 'customerId => ', customerId);
 
-        if (subscription_type == '50$') price = 'price_1JlBzBGbPq8HgjNUkj28RsYP'
+        if (subscription_type == '50$') price = 'price_1JlBzBGbPq8HgjNUrGAgL56J'
         else if (subscription_type == '60$') price = 'price_1JlBzBGbPq8HgjNUNE1zelCS'
-        else if (subscription_type == '70$') price = 'price_1JlBzBGbPq8HgjNUrGAgL56J'
+        else if (subscription_type == '70$') price = 'price_1JlBzBGbPq8HgjNUkj28RsYP'
 
         console.log('\n\n', 'price => ', price);
 
@@ -42,7 +42,7 @@ router.post('/deductPayment', async (req, res) => {
                     { price },
                 ],
             });
-            // await user.update({ 'payment.customer_id': payment.customer_id }, { 'payment.subscription_id': subscription });
+            await user.update({ 'payment.customer_id': payment.customer_id }, { 'payment.subscription_id': subscription });
             res.send('subscribed..');
         } catch (e) {
             console.log(e)
