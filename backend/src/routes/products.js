@@ -1,12 +1,7 @@
 require('dotenv').config();
 const router = require('express').Router();
 require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const user = require('../model/user');
-const cart = require('../model/cart');
 const item = require('../model/item');
-const checkAuth = require('../middleware/checkAuth');
 
 router.get('/get_items', async(req , res) =>{
     const item_data = await item.find();

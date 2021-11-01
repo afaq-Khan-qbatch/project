@@ -6,14 +6,17 @@ import { Grid, Paper } from '@material-ui/core';
 import { get_items } from './reducer/data';
 import { getDescription } from './reducer/data';
 import { get_cart, setCount, addInCart } from "./reducer/cartReducer";
+import FacebookLogin from 'react-facebook-login';
 
-import {getCookie , setCookie} from './cookie';
+
+import { getCookie, setCookie } from './cookie';
 
 import './App.css'
 import Description from './description';
 import Error from './Error';
 
 const useStyles = makeStyles((theme) => ({
+
     grid: {
         width: '100%',
         margin: '0px'
@@ -28,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = (props) => {
 
+    const responseFacebook = (response) => {
+        console.log(response);
+    }
+
     const match = useRouteMatch();
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -37,28 +44,51 @@ const Dashboard = (props) => {
     const { Description: d } = useSelector((state) => state.items_reducer);
 
     useEffect(() => {
+
+        // window.fbAsyncInit = function () {
+        //     FB.init({
+        //         appId: '182428134050110',
+        //         xfbml: true,
+        //         version: 'v12.0'
+        //     });
+        //     FB.AppEvents.logPageView();
+        //     FB.getLoginStatus(function (response) {
+        //         // statusChangeCallback(response);
+        //         console.log('response => ', response);
+        //     });
+        // };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+
         dispatch(get_items());
         dispatch(setCount());
         const token = getCookie('token');
-        if(!token){
-            setCookie('token' , (Math.random() + 1).toString(36).substring(7));
+        if (!token) {
+            setCookie('token', (Math.random() + 1).toString(36).substring(7));
         }
-       dispatch(get_cart());
-        
-        
+        dispatch(get_cart());
+
+
 
     }, [])
     const add_to_cart = (_id) => {
         const tokenn = getCookie('token');
-        if(!tokenn){
-            setCookie('token' , (Math.random() + 1).toString(36).substring(7));
+        if (!tokenn) {
+            setCookie('token', (Math.random() + 1).toString(36).substring(7));
         }
         const token = getCookie('token');
         const uesrdata = {
             id: _id,
             userId: token
         }
-       
+
         dispatch(addInCart(uesrdata));
         console.log('ok');
         dispatch(setCount(1));
@@ -68,7 +98,7 @@ const Dashboard = (props) => {
         dispatch(getDescription(itemId));
     }
 
-  
+
 
     return (
         <>
@@ -105,6 +135,15 @@ const Dashboard = (props) => {
             </div>
 
 
+            <FacebookLogin
+                appId="565322561343458"
+                autoLoad={true}
+                fields="name,email,picture"
+                scope="public_profile,user_friends"
+                callback={responseFacebook}
+                cssClass="my-facebook-button-class"
+                icon="fa-facebook"
+            />
         </>
     )
 }

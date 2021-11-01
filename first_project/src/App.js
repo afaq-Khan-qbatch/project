@@ -8,7 +8,6 @@ import Error from './Error';
 import SignIn from './singin';
 import SignUp from './signUp';
 import Stripe from './stripeExample';
-import { useHistory } from 'react-router-dom';
 
 function App() {
 

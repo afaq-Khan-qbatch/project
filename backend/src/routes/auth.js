@@ -65,7 +65,6 @@ router.post('/login', checkAuth , async (req, res) => {
         const  Token  = req.user;
         console.log("token  " , Token)
         console.log("emil " , email);
-        console.log(email)
         const loginuser = await user.findOne({ email: email.toLowerCase() });
         console.log("loginuser  " , loginuser);
         if (!loginuser) {
