@@ -10,8 +10,7 @@ import SignUp from './signUp';
 import Stripe from './stripeExample';
 
 function App() {
-  console.log('okokokko');
-  console.log('okokok111')
+  console.log('test');
   return (
     <>
       <NavBar />
