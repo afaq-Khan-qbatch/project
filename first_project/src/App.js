@@ -10,7 +10,6 @@ import SignUp from './signUp';
 import Stripe from './stripeExample';
 
 function App() {
-  console.log('test');
   return (
     <>
       <NavBar />
