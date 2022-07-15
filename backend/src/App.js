@@ -5,7 +5,7 @@ const auth = require('./routes/auth');
 const products = require('./routes/products');
 const carts = require('./routes/carts');
 const checkPayment = require('./routes/checkPayment');
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 const app = express();
 
 app.use(cors());

@@ -93,7 +93,7 @@ router.post('/login', checkAuth , async (req, res) => {
 
 
         try{
-            const updated = await cart.updateMany({ userId: Token },{ $set: {userId: email.toLowerCase()}})
+            if(Token) await cart.updateMany({ userId: Token },{ $set: {userId: email.toLowerCase()}})
         }catch(e){
             res.send(e);
         }

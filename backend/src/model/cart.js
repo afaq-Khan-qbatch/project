@@ -11,6 +11,10 @@ const schema = mongoose.Schema({
     },
     userId:{
         type: String
+    },
+    angular: {
+        type: Boolean,
+        default: false
     }
 })
 
